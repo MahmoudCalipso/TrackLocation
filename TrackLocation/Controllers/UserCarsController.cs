@@ -4,130 +4,48 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TrackLocation.IRepository;
 using TrackLocation.Model;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace TrackLocation.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/UserCars")]
     [ApiController]
     public class UserCarsController : ControllerBase
     {
 
-        private readonly TrackLocationContext _context;
-        public UserCarsController(TrackLocationContext context)
+        public readonly IUserCarsRepository _repository;
+        public UserCarsController(IUserCarsRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET api/<UserCarsController>/5
-        [HttpGet("userid")]
-        public ActionResult<Car> GetUserCars(int userid)
+        [HttpGet("{userId}")]
+        public async Task<ActionResult<ICollection<Car>>>  GetUserCars(long userid)
         {
-            var result = from car in _context.Car
-                         join user in _context.User
-                         on car.User.UserId equals user.UserId
-                         where car.UserId == userid
-
-                         select new Car
-                         {
-                             CarId = car.CarId,
-                             NameCar = car.NameCar,
-                             DateCirculation = car.DateCirculation,
-                             Matricule = car.Matricule,
-                             Puissance = car.Puissance,
-                             NumberPlace = car.NumberPlace,
-                             TotKm = car.TotKm,
-                             FamilyCarId = car.FamilyCarId,
-                             TypeCarId = car.TypeCarId,
-                             UserId = car.UserId
-
-                         };
-
-            IQueryable<Car> ListCar = result;
-            return (Car)ListCar;
+            return await _repository.GetUserCars(userid);
         }
 
-        [HttpGet("UserId/CarId")]
-        public ActionResult<Car> GetUserCar(int UserId, int CarId)
+        [HttpGet("{userId}/{CarId}")]
+        public async Task<ActionResult<Car>> GetUserCar(long UserId, long CarId)
         {
-            var result = from car in _context.Car
-                         join user in _context.User
-                         on car.User.UserId equals user.UserId
-                         where car.UserId == UserId && car.CarId == CarId
-
-
-                         select new Car
-                         {
-                             CarId = car.CarId,
-                             NameCar = car.NameCar,
-                             DateCirculation = car.DateCirculation,
-                             Matricule = car.Matricule,
-                             Puissance = car.Puissance,
-                             NumberPlace = car.NumberPlace,
-                             TotKm = car.TotKm,
-                             FamilyCarId = car.FamilyCarId,
-                             TypeCarId = car.TypeCarId,
-                             UserId = car.UserId
-
-                         };
-
-            IQueryable<Car> ListCar = result;
-            return (Car)ListCar;
+            return await _repository.GetUserCar(UserId, CarId); 
         }
 
         [HttpPut("{userId}/{carId}")]
-        public async Task<IActionResult> UpdateUserCar (long userId, long carId )
+        public async Task<ActionResult<Car>> UpdateUserCar (long userId, long carId , Car car )
         {
-            var user =  _context.User.Find(userId);
-            var car = _context.Car.Where(c => c.CarId == carId).Where(user => user.UserId == userId);
-            if ( car == null  )
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(car).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CarExists(carId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+           
+             return await _repository.UpdateUserCar(userId, carId, car);
         }
 
 
         [HttpDelete("{userid}/{carid}")]
         public async Task<ActionResult<Car>> DeleteUserCar(long userid, long carid)
         {
-            var car = await _context.Car.Include(u => u.CarId == carid).FirstOrDefaultAsync(car =>car.UserId == userid);
-            if (car == null)
-            {
-                return NotFound();
-            }
-
-            _context.Car.Remove(car);
-            await _context.SaveChangesAsync();
-
-            return Ok();
+            return await _repository.DeleteUserCar(userid, carid);
         }
-
-        private bool CarExists(long id)
-        {
-            return _context.Car.Any(e => e.CarId == id);
-        }
-
     }
 }

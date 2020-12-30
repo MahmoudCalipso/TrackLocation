@@ -1,10 +1,14 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace TrackLocation.Model
 {
-    public partial class TrackLocationContext : DbContext
+    public class TrackLocationContext:DbContext
     {
         public TrackLocationContext()
         {
@@ -15,13 +19,12 @@ namespace TrackLocation.Model
         {
         }
 
-       
+
         public virtual DbSet<Car> Car { get; set; }
         public virtual DbSet<FamilyCar> FamilyCar { get; set; }
         public virtual DbSet<Location> Location { get; set; }
         public virtual DbSet<TypeCar> TypeCar { get; set; }
         public virtual DbSet<User> User { get; set; }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -29,10 +32,9 @@ namespace TrackLocation.Model
                 optionsBuilder.UseSqlServer("Data Source=DESKTOP-9GD4K4L;Initial Catalog=TrackLocation;User ID=sa;Password=calipso1996;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False", x => x.UseNetTopologySuite());
             }
         }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           
+
             modelBuilder.Entity<Car>(entity =>
             {
                 entity.HasIndex(e => e.FamilyCarId);
@@ -74,10 +76,15 @@ namespace TrackLocation.Model
 
                 entity.HasIndex(e => e.Severity)
                     .HasName("ix_severity");
-
+               
                 entity.Property(e => e.LocationId)
                     .HasColumnName("LocationID")
                     .ValueGeneratedNever();
+                entity.Property(b => b.Tracking)
+                     .HasConversion(
+                        v => JsonConvert.SerializeObject(v),
+                        v => JsonConvert.DeserializeObject<ICollection<Coordination>>(v));
+                        
 
                 entity.Property(e => e.CarId).HasColumnName("CarID");
 
@@ -146,9 +153,10 @@ namespace TrackLocation.Model
                 entity.Property(e => e.TypeUser).IsRequired();
             });
 
-            OnModelCreatingPartial(modelBuilder);
+            
         }
+        
 
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
     }
 }

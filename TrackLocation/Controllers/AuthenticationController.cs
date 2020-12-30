@@ -24,14 +24,13 @@ namespace TrackLocation.Controllers
         //private readonly ILogger<AuthenticationController> _logger;
         private readonly IUserService _userService;
         private readonly IJwtAuthManager _jwtAuthManager;
-#pragma warning disable CS0649 // Le champ 'AuthenticationController._context' n'est jamais assigné et aura toujours sa valeur par défaut null
-        private readonly TrackLocationContext _context;
-#pragma warning restore CS0649 // Le champ 'AuthenticationController._context' n'est jamais assigné et aura toujours sa valeur par défaut null
+        
 
-        public AuthenticationController(IUserService userService, IJwtAuthManager jwtAuthManager)
+        public AuthenticationController(IUserService userService, IJwtAuthManager jwtAuthManager, TrackLocationContext context)
         {
             _userService = userService;
             _jwtAuthManager = jwtAuthManager;
+           
         }
         
 
@@ -77,23 +76,19 @@ namespace TrackLocation.Controllers
         [HttpPost("signup")]
         public async Task<ActionResult<User>> SignUp(User user)
         {
-            _context.User.Add(user);
-            await _context.SaveChangesAsync();
-
-            return Ok();
+            await _userService.SignUp(user);
+            return user;
         }
 
         [HttpGet("user")]
         [Authorize]
-#pragma warning disable CS1998 // Cette méthode async n'a pas d'opérateur 'await' et elle s'exécutera de façon synchrone. Utilisez l'opérateur 'await' pour attendre les appels d'API non bloquants ou 'await Task.Run(…)' pour effectuer un travail utilisant le processeur sur un thread d'arrière-plan.
-        public async Task<ActionResult> GetCurrentUser()
-#pragma warning restore CS1998 // Cette méthode async n'a pas d'opérateur 'await' et elle s'exécutera de façon synchrone. Utilisez l'opérateur 'await' pour attendre les appels d'API non bloquants ou 'await Task.Run(…)' pour effectuer un travail utilisant le processeur sur un thread d'arrière-plan.
+        public ActionResult GetCurrentUser()
         {
             return Ok(new LoginResult
             {
-            
+
                 Email = User.Identity.Name
-            }) ; 
+            });
         }
 
         [HttpPost("logout")]

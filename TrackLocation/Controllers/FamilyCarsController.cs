@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TrackLocation.IRepository;
 using TrackLocation.Model;
 
 namespace TrackLocation.Controllers
@@ -13,97 +14,54 @@ namespace TrackLocation.Controllers
     [ApiController]
     public class FamilyCarsController : ControllerBase
     {
-        private readonly TrackLocationContext _context;
+        private readonly IFamilyCarsRepository _repository;
 
-        public FamilyCarsController(TrackLocationContext context)
+        public FamilyCarsController(IFamilyCarsRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: api/FamilyCars
         [HttpGet]
         public async Task<ActionResult<IEnumerable<FamilyCar>>> GetFamilyCar()
         {
-            return await _context.FamilyCar.ToListAsync();
+            return await _repository.GetFamilyCar();
         }
 
         // GET: api/FamilyCars/5
         [HttpGet("{id}")]
         public async Task<ActionResult<FamilyCar>> GetFamilyCar(long id)
         {
-            var familyCar = await _context.FamilyCar.FindAsync(id);
-
-            if (familyCar == null)
-            {
-                return NotFound();
-            }
-
-            return familyCar;
+            return await _repository.GetFamilyCar(id);
         }
 
         // PUT: api/FamilyCars/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutFamilyCar(long id, FamilyCar familyCar)
+        public async Task<ActionResult<FamilyCar>> PutFamilyCar(long id, FamilyCar familyCar)
         {
             if (id != familyCar.FamilyCarId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(familyCar).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!FamilyCarExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+           return await _repository.PutFamilyCar(id, familyCar);
         }
 
         // POST: api/FamilyCars
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<FamilyCar>> PostFamilyCar(FamilyCar familyCar)
         {
-            _context.FamilyCar.Add(familyCar);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetFamilyCar", new { id = familyCar.FamilyCarId }, familyCar);
+            return await _repository.PostFamilyCar(familyCar);
         }
 
         // DELETE: api/FamilyCars/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<FamilyCar>> DeleteFamilyCar(long id)
         {
-            var familyCar = await _context.FamilyCar.FindAsync(id);
-            if (familyCar == null)
-            {
-                return NotFound();
-            }
 
-            _context.FamilyCar.Remove(familyCar);
-            await _context.SaveChangesAsync();
-
-            return familyCar;
+            return await _repository.DeleteFamilyCar(id);
         }
 
-        private bool FamilyCarExists(long id)
-        {
-            return _context.FamilyCar.Any(e => e.FamilyCarId == id);
-        }
+        
     }
 }

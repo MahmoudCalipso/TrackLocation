@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,5 +12,6 @@ namespace TrackLocation.Services
         bool IsAnExistingUser(string Email);
         Task<bool> IsValidUserCredentials(string Email, string password);
         Task<User> GetUser(string Email, string Password);
+        Task<ActionResult<User>> SignUp(User user);
     }
 }

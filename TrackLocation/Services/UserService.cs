@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -61,6 +62,13 @@ namespace TrackLocation.Services
 
 
         }
-        
+        public async Task<ActionResult<User>> SignUp(User user)
+        {
+            _context.User.Add(user);
+            await _context.SaveChangesAsync();
+
+            return user;
+        }
+
     }
 }

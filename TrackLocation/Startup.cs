@@ -15,7 +15,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using TrackLocation.Infrastructure;
+using TrackLocation.IRepository;
 using TrackLocation.Model;
+using TrackLocation.Repository;
 using TrackLocation.Requests;
 using TrackLocation.Services;
 
@@ -35,9 +37,10 @@ namespace TrackLocation
         {
             services.AddDbContext<TrackLocationContext>(optionns =>
               optionns.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
-            services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.IgnoreNullValues = true);
+            services.AddControllers().AddNewtonsoftJson(options =>
+             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+           );            
             //JWT Config
-
             var jwtTokenConfig = Configuration.GetSection("jwtTokenConfig").Get<JwtTokenConfig>();
             services.AddSingleton(jwtTokenConfig);
             services.AddAuthentication(x =>
@@ -60,9 +63,15 @@ namespace TrackLocation
                     ClockSkew = TimeSpan.FromMinutes(1)
                 };
             });
-            services.AddSingleton<IJwtAuthManager, JwtAuthManager>();
             services.AddHostedService<JwtRefreshTokenCache>();
+            services.AddSingleton<IJwtAuthManager, JwtAuthManager>(); 
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IFamilyCarsRepository, FamilyCarsRepository>();
+            services.AddScoped<ICarsRepository, CarsRepository>();
+            services.AddScoped<ILocationsRepository, LocationsRepository>();
+            services.AddScoped<IUsersRepository,UsersRepository> ();
+            services.AddScoped<ITypeCarsRepository, TypeCarsRepository>();
+            services.AddScoped<IUserCarsRepository, UserCarsRepository>();
 
 
             // CORS Origini 
@@ -77,6 +86,7 @@ namespace TrackLocation
                             .AllowAnyHeader();
                         });
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

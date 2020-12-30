@@ -10,7 +10,7 @@ using TrackLocation.Model;
 namespace TrackLocation.Migrations
 {
     [DbContext(typeof(TrackLocationContext))]
-    [Migration("20201007164734_MyFirstMigration")]
+    [Migration("20201011192252_MyFirstMigration")]
     partial class MyFirstMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
+using TrackLocation.Model;
 
 namespace TrackLocation.Migrations
 {
@@ -98,7 +100,7 @@ namespace TrackLocation.Migrations
                 columns: table => new
                 {
                     LocationID = table.Column<long>(nullable: false),
-                    Tracking = table.Column<string>(nullable: false),
+                    Tracking = table.Column<ICollection<Coordination>>(nullable: false),
                     startDate = table.Column<DateTime>(nullable: false),
                     endDate = table.Column<DateTime>(nullable: false),
                     UserID = table.Column<long>(nullable: false),
