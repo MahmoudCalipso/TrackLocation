@@ -30,6 +30,7 @@ namespace TrackLocation.Model
         public string Password { get; set; }
         [Required]
         public string TypeUser { get; set; }
+        public long CreatedByAdminID { get; set; }
         public string Token { get; set; }
 
         public virtual ICollection<Car> Car { get; set; }
