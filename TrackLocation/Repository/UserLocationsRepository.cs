@@ -40,9 +40,7 @@ namespace TrackLocation.Repository
                                           select new Location
                                           {
                                               LocationId = location.LocationId,
-                                              StartDate = location.StartDate,
-                                              EndDate = location.EndDate,
-                                              Tracking = location.Tracking,
+                                              
                                               UserId = location.UserId
 
                                           }).ToListAsync();
@@ -63,9 +61,7 @@ namespace TrackLocation.Repository
                                           select new Location
                                           {
                                               LocationId = location.LocationId,
-                                              StartDate = location.StartDate,
-                                              EndDate = location.EndDate,
-                                              Tracking = location.Tracking,
+                                             
                                               UserId = location.UserId
 
                                           }).ToListAsync();

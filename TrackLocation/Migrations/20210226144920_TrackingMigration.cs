@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
-using TrackLocation.Model;
 
 namespace TrackLocation.Migrations
 {
-    public partial class MyFirstMigration : Migration
+    public partial class TrackingMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -49,6 +47,7 @@ namespace TrackLocation.Migrations
                     NumPassport = table.Column<string>(maxLength: 50, nullable: false),
                     Password = table.Column<string>(nullable: false),
                     TypeUser = table.Column<string>(nullable: false),
+                    CreatedByAdminID = table.Column<long>(nullable: false),
                     token = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -100,12 +99,8 @@ namespace TrackLocation.Migrations
                 columns: table => new
                 {
                     LocationID = table.Column<long>(nullable: false),
-                    Tracking = table.Column<ICollection<Coordination>>(nullable: false),
-                    startDate = table.Column<DateTime>(nullable: false),
-                    endDate = table.Column<DateTime>(nullable: false),
                     UserID = table.Column<long>(nullable: false),
-                    CarID = table.Column<long>(nullable: false),
-                    severity = table.Column<byte>(nullable: true, computedColumnSql: "(CONVERT([tinyint],json_value([Tracking],'$.severity')))")
+                    CarID = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -123,6 +118,38 @@ namespace TrackLocation.Migrations
                         principalTable: "User",
                         principalColumn: "UserID",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tracks",
+                columns: table => new
+                {
+                    TrackID = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    latitude = table.Column<double>(nullable: false),
+                    longitude = table.Column<double>(nullable: false),
+                    SPEED = table.Column<int>(nullable: false),
+                    ENGINE_RPM = table.Column<long>(nullable: false),
+                    ENGINE_LOAD = table.Column<string>(nullable: true),
+                    AmbientAirTemp = table.Column<string>(nullable: true),
+                    ThrottlePos = table.Column<string>(nullable: true),
+                    insFuel = table.Column<double>(nullable: false),
+                    valX = table.Column<double>(nullable: false),
+                    valY = table.Column<double>(nullable: false),
+                    valZ = table.Column<double>(nullable: false),
+                    zone = table.Column<string>(nullable: true),
+                    timestamp = table.Column<DateTime>(nullable: false),
+                    LocationId = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tracks", x => x.TrackID);
+                    table.ForeignKey(
+                        name: "FK_Tracks_Location_LocationId",
+                        column: x => x.LocationId,
+                        principalTable: "Location",
+                        principalColumn: "LocationID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -146,18 +173,21 @@ namespace TrackLocation.Migrations
                 column: "CarID");
 
             migrationBuilder.CreateIndex(
-                name: "ix_severity",
-                table: "Location",
-                column: "severity");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Location_UserID",
                 table: "Location",
                 column: "UserID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tracks_LocationId",
+                table: "Tracks",
+                column: "LocationId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Tracks");
+
             migrationBuilder.DropTable(
                 name: "Location");
 

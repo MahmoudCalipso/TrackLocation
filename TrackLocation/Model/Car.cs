@@ -21,7 +21,7 @@ namespace TrackLocation.Model
         [Required]
         public int NumberPlace { get; set; }
         [Required]
-        [Index(IsUnique = true)]
+        
         public string Matricule { get; set; }
         [DataType(DataType.Date)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/0:dd/yyyy}")]

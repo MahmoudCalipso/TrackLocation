@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using TrackLocation.Hubs;
 using TrackLocation.Infrastructure;
 using TrackLocation.IRepository;
 using TrackLocation.Model;
@@ -39,7 +40,8 @@ namespace TrackLocation
               optionns.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
             services.AddControllers().AddNewtonsoftJson(options =>
              options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-           );            
+           );
+            services.AddSignalR();
             //JWT Config
             var jwtTokenConfig = Configuration.GetSection("jwtTokenConfig").Get<JwtTokenConfig>();
             services.AddSingleton(jwtTokenConfig);
@@ -109,6 +111,7 @@ namespace TrackLocation
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<TrackHub>("/track");
             });
         }
     }

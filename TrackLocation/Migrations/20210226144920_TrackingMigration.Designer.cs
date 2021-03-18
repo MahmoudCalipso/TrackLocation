@@ -10,8 +10,8 @@ using TrackLocation.Model;
 namespace TrackLocation.Migrations
 {
     [DbContext(typeof(TrackLocationContext))]
-    [Migration("20201011192252_MyFirstMigration")]
-    partial class MyFirstMigration
+    [Migration("20210226144920_TrackingMigration")]
+    partial class TrackingMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -99,24 +99,6 @@ namespace TrackLocation.Migrations
                         .HasColumnName("CarID")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnName("endDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<byte?>("Severity")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnName("severity")
-                        .HasColumnType("tinyint")
-                        .HasComputedColumnSql("(CONVERT([tinyint],json_value([Tracking],'$.severity')))");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnName("startDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Tracking")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<long>("UserId")
                         .HasColumnName("UserID")
                         .HasColumnType("bigint");
@@ -127,12 +109,65 @@ namespace TrackLocation.Migrations
 
                     b.HasIndex("CarId");
 
-                    b.HasIndex("Severity")
-                        .HasName("ix_severity");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("Location");
+                });
+
+            modelBuilder.Entity("TrackLocation.Model.Tracks", b =>
+                {
+                    b.Property<long>("TrackID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AmbientAirTemp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ENGINE_LOAD")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("ENGINE_RPM")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("LocationId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("SPEED")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ThrottlePos")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("insFuel")
+                        .HasColumnType("float");
+
+                    b.Property<double>("latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("longitude")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("valX")
+                        .HasColumnType("float");
+
+                    b.Property<double>("valY")
+                        .HasColumnType("float");
+
+                    b.Property<double>("valZ")
+                        .HasColumnType("float");
+
+                    b.Property<string>("zone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TrackID");
+
+                    b.HasIndex("LocationId");
+
+                    b.ToTable("Tracks");
                 });
 
             modelBuilder.Entity("TrackLocation.Model.TypeCar", b =>
@@ -164,6 +199,9 @@ namespace TrackLocation.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
+
+                    b.Property<long>("CreatedByAdminID")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -239,6 +277,15 @@ namespace TrackLocation.Migrations
                         .WithMany("Location")
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK_USER_LOC")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TrackLocation.Model.Tracks", b =>
+                {
+                    b.HasOne("TrackLocation.Model.Location", "Location")
+                        .WithMany("Tracks")
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

@@ -25,7 +25,7 @@ namespace TrackLocation.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Location>>> GetLocation()
         {
-            return await _repository.GetLocation();
+            return await _repository.GetListLocation();
         }
 
         // GET: api/Locations/5

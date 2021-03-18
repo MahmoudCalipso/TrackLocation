@@ -3,13 +3,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TrackLocation.Model
 {
-    public class Tracks
+    public partial class Tracks
     {
         [Key]
         public long TrackID { get; set; }
         public double latitude { get; set; }
        	public double longitude { get; set; }
-       	public int speed { get; set; }
+       	public int SPEED { get; set; }
         public long ENGINE_RPM {get;set;}
         public string ENGINE_LOAD {get;set;}
         public string AmbientAirTemp {get;set;}

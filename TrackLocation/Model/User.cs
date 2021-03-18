@@ -16,15 +16,16 @@ namespace TrackLocation.Model
         public string LastName { get; set; }
         [Required]
         [EmailAddress]
-        [Index(IsUnique = true)]
+       
+      //  [Index(IsUnique = true)]
         public string Email { get; set; }
         [Required]
-        [Index(IsUnique = true)]
+       // [Index(IsUnique = true)]
         public string Cin { get; set; }
         [Required]
-        [Index(IsUnique = true)]
+       // [Index(IsUnique = true)]
         public string NumTel { get; set; }
-        [Index(IsUnique = true)]
+        //[Index(IsUnique = true)]
         public string NumPassport { get; set; }
         [Required]
         public string Password { get; set; }

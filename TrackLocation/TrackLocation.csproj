@@ -12,7 +12,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="EntityFramework" Version="6.4.4" />
+    <Compile Remove="Migrations\20210226144812_TrackingMigration.cs" />
+    <Compile Remove="Migrations\20210226144812_TrackingMigration.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="JWT" Version="7.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.8" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.8" />
@@ -20,6 +24,8 @@
     <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="3.1.8" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.8" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="5.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="2.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="3.1.8" />
@@ -49,6 +55,10 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
     <PackageReference Include="System.Runtime" Version="4.3.1" />
     <PackageReference Include="System.Runtime.Serialization.Json" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 
