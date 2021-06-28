@@ -51,6 +51,20 @@ namespace TrackLocation.Repository
             return user;
         }
 
+        public async Task<ActionResult<IEnumerable<User>>> getAllUserManagerForSuperUser(long super_user_id, string typeUser)
+        {
+            var listeUserManager = await _context.User.Where(c => c.UserId == super_user_id)
+                                                .Where(u => u.TypeUser == typeUser)
+                                                .Where(x => x.CreatedByAdminID == super_user_id).ToListAsync();
+            return listeUserManager;
+        }
+        public async Task<ActionResult<IEnumerable<User>>> getAllDriversForUserManager(long user_manager_id, string typeUser)
+        {
+            var listedrivers = await _context.User.Where(c => c.UserId == user_manager_id)
+                                                .Where(u => u.TypeUser == typeUser)
+                                                .Where(x => x.CreatedByAdminID == user_manager_id).ToListAsync();
+            return listedrivers;
+        }
         public bool UserExists(long id)
         {
             return _context.User.Any(e => e.UserId == id);

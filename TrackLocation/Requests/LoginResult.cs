@@ -18,6 +18,8 @@ namespace TrackLocation.Requests
 
         [JsonPropertyName("TypeUser")]
         public string TypeUser { get; set; }
+        [JsonPropertyName("CreatedByAdminID")]
+        public long CreatedByAdminID { get; set; }
 
         [JsonPropertyName("accessToken")]
         public string AccessToken { get; set; }

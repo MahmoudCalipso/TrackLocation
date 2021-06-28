@@ -10,8 +10,8 @@ using TrackLocation.Model;
 namespace TrackLocation.Migrations
 {
     [DbContext(typeof(TrackLocationContext))]
-    [Migration("20210226144920_TrackingMigration")]
-    partial class TrackingMigration
+    [Migration("20210417071654_MyFirstMigration")]
+    partial class MyFirstMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -25,7 +25,6 @@ namespace TrackLocation.Migrations
                 {
                     b.Property<long>("CarId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("CarID")
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -33,7 +32,6 @@ namespace TrackLocation.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<long>("FamilyCarId")
-                        .HasColumnName("FamilyCarID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Matricule")
@@ -54,11 +52,9 @@ namespace TrackLocation.Migrations
                         .HasColumnType("int");
 
                     b.Property<long>("TypeCarId")
-                        .HasColumnName("TypeCarID")
                         .HasColumnType("bigint");
 
                     b.Property<long>("UserId")
-                        .HasColumnName("UserID")
                         .HasColumnType("bigint");
 
                     b.HasKey("CarId");
@@ -76,7 +72,6 @@ namespace TrackLocation.Migrations
                 {
                     b.Property<long>("FamilyCarId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("FamilyCarID")
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -92,20 +87,23 @@ namespace TrackLocation.Migrations
             modelBuilder.Entity("TrackLocation.Model.Location", b =>
                 {
                     b.Property<long>("LocationId")
-                        .HasColumnName("LocationID")
-                        .HasColumnType("bigint");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<long>("CarId")
-                        .HasColumnName("CarID")
                         .HasColumnType("bigint");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<long>("UserId")
-                        .HasColumnName("UserID")
                         .HasColumnType("bigint");
 
-                    b.HasKey("LocationId")
-                        .HasName("PK__Location__E7FEA47605B8C4E7")
-                        .HasAnnotation("SqlServer:Clustered", false);
+                    b.HasKey("LocationId");
 
                     b.HasIndex("CarId");
 
@@ -174,7 +172,6 @@ namespace TrackLocation.Migrations
                 {
                     b.Property<long>("TypeCarId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("TypeCarID")
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -191,14 +188,12 @@ namespace TrackLocation.Migrations
                 {
                     b.Property<long>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("UserID")
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Cin")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("CreatedByAdminID")
                         .HasColumnType("bigint");
@@ -209,30 +204,24 @@ namespace TrackLocation.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NumPassport")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NumTel")
                         .IsRequired()
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Token")
-                        .HasColumnName("token")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TypeUser")
@@ -270,13 +259,13 @@ namespace TrackLocation.Migrations
                     b.HasOne("TrackLocation.Model.Car", "Car")
                         .WithMany("Location")
                         .HasForeignKey("CarId")
-                        .HasConstraintName("FK_CAR_LOC")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TrackLocation.Model.User", "User")
                         .WithMany("Location")
                         .HasForeignKey("UserId")
-                        .HasConstraintName("FK_USER_LOC")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

@@ -56,7 +56,8 @@ namespace TrackLocation.Controllers
                 new Claim(ClaimTypes.Name,request.Email),
                 new Claim("UserId", Convert.ToString(User.Result.UserId)),
                 new Claim("Username", User.Result.FirstName + ' '+ User.Result.LastName),
-                new Claim("TypeUser", User.Result.TypeUser)
+                new Claim("TypeUser", User.Result.TypeUser),
+                new Claim("CreatedByAdminID", User.Result.CreatedByAdminID.ToString() )
             };
 
             var jwtResult = _jwtAuthManager.GenerateTokens(request.Email, claims, DateTime.Now);
@@ -67,6 +68,7 @@ namespace TrackLocation.Controllers
                 UserId =  User.Result.UserId,
                 Username = User.Result.FirstName + ' ' + User.Result.LastName,
                 TypeUser = User.Result.TypeUser,
+                CreatedByAdminID = User.Result.CreatedByAdminID,
                 AccessToken = jwtResult.AccessToken,
                 RefreshToken = jwtResult.RefreshToken.TokenString
             });

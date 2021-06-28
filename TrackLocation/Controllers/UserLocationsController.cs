@@ -33,7 +33,7 @@ namespace TrackLocation.Controllers
 
 
         //Real Time Show For User Manager
-        [HttpGet("/track/{userManagerId}")]
+        [HttpGet("{userManagerId}")]
         public async Task<ActionResult<IEnumerable<Location>>> GetAllDriversTrackingsForUserManager(long userManagerId)
         {
             var data = await _repository.GetAllDriversTrackingsForUserManager(userManagerId);
@@ -43,12 +43,12 @@ namespace TrackLocation.Controllers
         }
 
 
-        //Real Time Show For Conducteur
-        [HttpGet("/track/{userid}")]
-        public async Task<ActionResult<IEnumerable<Location>>> GetTrackingForDriver(long userid)
+        // Show tracking driver 
+        [HttpGet("/{userid}/track/{locationId}")]
+        public async Task<ActionResult<IEnumerable<Location>>> GetTrackingForDriver(long userid, long locationId)
         {
-            var data = await _repository.GetTrackingForDriver(userid);
-            var timerManager = new TimerManager(async () => await _hub.Clients.All.SendAsync("getDriverTracking", data));
+            var data = await _repository.GetTrackingForDriver(userid, locationId);
+            //var timerManager = new TimerManager(async () => await _hub.Clients.All.SendAsync("getDriverTracking", data));
             return Ok(data);
 
         }

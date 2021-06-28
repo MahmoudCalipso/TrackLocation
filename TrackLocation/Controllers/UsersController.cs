@@ -55,5 +55,18 @@ namespace TrackLocation.Controllers
         {
             return await _repository.DeleteUser(id);
         }
+
+        
+        [HttpGet("{id}/type/{type}")]
+        public async Task<ActionResult<IEnumerable<User>>> getAllUserManagerForSuperUser (long id , string type)
+        {
+            return await _repository.getAllUserManagerForSuperUser(id, type);
+        }
+
+        [HttpGet("{id}/type/{type}")]
+        public async Task<ActionResult<IEnumerable<User>>> getAllDriversForUserManager(long id, string type)
+        {
+            return await _repository.getAllDriversForUserManager(id, type);
+        }
     }
 }

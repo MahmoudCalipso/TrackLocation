@@ -36,7 +36,7 @@ namespace TrackLocation.Repository
         }
 
         /*
-         *  Show All Tracking For SuperUser 
+         *  Show All Tracking For SuperUser (real time)
          */
         public async Task<ActionResult<IEnumerable<Location>>> GetAllTrackings()
         {
@@ -51,7 +51,7 @@ namespace TrackLocation.Repository
 
 
         /*
-         *  Show All Tracking For User Manager
+         *  Show All Tracking For User Manager (real time)
          *  userManagerId => get it from the session to User Manager
          */
         public async Task<ActionResult<IEnumerable<Location>>> 
@@ -62,22 +62,19 @@ namespace TrackLocation.Repository
                 .Include(u => u.User)
                 .Where(u=> u.User.CreatedByAdminID == userManagerId).ToListAsync();
 
-
             return trackings;
         }
 
         /*
-         * 
+         *  get one tracking for driver 
          */
-        public async Task<ActionResult<IEnumerable<Location>>> GetTrackingForDriver(long userid)
+        public async Task<ActionResult<IEnumerable<Location>>> GetTrackingForDriver(long userid, long locationId)
         {
 
             var trackings = await _context.Location.Include(t => t.Tracks)
                .Include(d => d.Car)
                .Include(u => u.User)
-               .Where(u => u.User.UserId == userid).ToListAsync();
-
-
+               .Where(u => u.User.UserId == userid && u.LocationId == locationId).ToListAsync();
             return trackings;
 
         }
@@ -95,8 +92,6 @@ namespace TrackLocation.Repository
                 .Include(d => d.Car)
                 .Include(u => u.User)
                 .Where(u => u.User.CreatedByAdminID == userManagerId && u.UserId == driverid).ToListAsync();
-
-
             return trackings;
         }
 
@@ -128,8 +123,6 @@ namespace TrackLocation.Repository
                .Include(d => d.Car)
                .Include(u => u.User)
                .Where( u => u.UserId == userid).ToListAsync();
-
-
             return trackings;
         }
 

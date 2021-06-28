@@ -15,12 +15,14 @@ namespace TrackLocation.Model
         /* [NotMapped]
          [JsonProperty("Tracking")]
          public ICollection<Coordination> Tracking { get; set; }
-
-         [Required]
-         public DateTime StartDate { get; set; }
-         [Required]
-         public DateTime EndDate { get; set; }
-         */
+        */
+        [Required]
+        [DataType(DataType.Date)]
+        public DateTime StartDate { get; set; }
+        [Required]
+        [DataType(DataType.Date)]
+        public DateTime EndDate { get; set; }
+         
         [Required]
         public long UserId { get; set; }
         [Required]

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TrackLocation.Migrations
 {
-    public partial class TrackingMigration : Migration
+    public partial class MyFirstMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,55 +11,55 @@ namespace TrackLocation.Migrations
                 name: "FamilyCar",
                 columns: table => new
                 {
-                    FamilyCarID = table.Column<long>(nullable: false)
+                    FamilyCarId = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     NameFamily = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FamilyCar", x => x.FamilyCarID);
+                    table.PrimaryKey("PK_FamilyCar", x => x.FamilyCarId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TypeCar",
                 columns: table => new
                 {
-                    TypeCarID = table.Column<long>(nullable: false)
+                    TypeCarId = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     NameType = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TypeCar", x => x.TypeCarID);
+                    table.PrimaryKey("PK_TypeCar", x => x.TypeCarId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new
                 {
-                    UserID = table.Column<long>(nullable: false)
+                    UserId = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(maxLength: 30, nullable: false),
-                    LastName = table.Column<string>(maxLength: 30, nullable: false),
+                    FirstName = table.Column<string>(nullable: false),
+                    LastName = table.Column<string>(nullable: false),
                     Email = table.Column<string>(nullable: false),
-                    Cin = table.Column<string>(maxLength: 50, nullable: false),
-                    NumTel = table.Column<string>(maxLength: 30, nullable: false),
-                    NumPassport = table.Column<string>(maxLength: 50, nullable: false),
+                    Cin = table.Column<string>(nullable: false),
+                    NumTel = table.Column<string>(nullable: false),
+                    NumPassport = table.Column<string>(nullable: true),
                     Password = table.Column<string>(nullable: false),
                     TypeUser = table.Column<string>(nullable: false),
                     CreatedByAdminID = table.Column<long>(nullable: false),
-                    token = table.Column<string>(nullable: true)
+                    Token = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.UserID);
+                    table.PrimaryKey("PK_User", x => x.UserId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Car",
                 columns: table => new
                 {
-                    CarID = table.Column<long>(nullable: false)
+                    CarId = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     NameCar = table.Column<string>(nullable: false),
                     Puissance = table.Column<int>(nullable: false),
@@ -67,30 +67,30 @@ namespace TrackLocation.Migrations
                     Matricule = table.Column<string>(nullable: false),
                     DateCirculation = table.Column<DateTime>(nullable: false),
                     TotKm = table.Column<int>(nullable: true),
-                    FamilyCarID = table.Column<long>(nullable: false),
-                    UserID = table.Column<long>(nullable: false),
-                    TypeCarID = table.Column<long>(nullable: false)
+                    FamilyCarId = table.Column<long>(nullable: false),
+                    UserId = table.Column<long>(nullable: false),
+                    TypeCarId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Car", x => x.CarID);
+                    table.PrimaryKey("PK_Car", x => x.CarId);
                     table.ForeignKey(
-                        name: "FK_Car_FamilyCar_FamilyCarID",
-                        column: x => x.FamilyCarID,
+                        name: "FK_Car_FamilyCar_FamilyCarId",
+                        column: x => x.FamilyCarId,
                         principalTable: "FamilyCar",
-                        principalColumn: "FamilyCarID",
+                        principalColumn: "FamilyCarId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Car_TypeCar_TypeCarID",
-                        column: x => x.TypeCarID,
+                        name: "FK_Car_TypeCar_TypeCarId",
+                        column: x => x.TypeCarId,
                         principalTable: "TypeCar",
-                        principalColumn: "TypeCarID",
+                        principalColumn: "TypeCarId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Car_User_UserID",
-                        column: x => x.UserID,
+                        name: "FK_Car_User_UserId",
+                        column: x => x.UserId,
                         principalTable: "User",
-                        principalColumn: "UserID",
+                        principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -98,26 +98,28 @@ namespace TrackLocation.Migrations
                 name: "Location",
                 columns: table => new
                 {
-                    LocationID = table.Column<long>(nullable: false),
-                    UserID = table.Column<long>(nullable: false),
-                    CarID = table.Column<long>(nullable: false)
+                    LocationId = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StartDate = table.Column<DateTime>(nullable: false),
+                    EndDate = table.Column<DateTime>(nullable: false),
+                    UserId = table.Column<long>(nullable: false),
+                    CarId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Location__E7FEA47605B8C4E7", x => x.LocationID)
-                        .Annotation("SqlServer:Clustered", false);
+                    table.PrimaryKey("PK_Location", x => x.LocationId);
                     table.ForeignKey(
-                        name: "FK_CAR_LOC",
-                        column: x => x.CarID,
+                        name: "FK_Location_Car_CarId",
+                        column: x => x.CarId,
                         principalTable: "Car",
-                        principalColumn: "CarID",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "CarId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_USER_LOC",
-                        column: x => x.UserID,
+                        name: "FK_Location_User_UserId",
+                        column: x => x.UserId,
                         principalTable: "User",
-                        principalColumn: "UserID",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -148,34 +150,34 @@ namespace TrackLocation.Migrations
                         name: "FK_Tracks_Location_LocationId",
                         column: x => x.LocationId,
                         principalTable: "Location",
-                        principalColumn: "LocationID",
+                        principalColumn: "LocationId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Car_FamilyCarID",
+                name: "IX_Car_FamilyCarId",
                 table: "Car",
-                column: "FamilyCarID");
+                column: "FamilyCarId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Car_TypeCarID",
+                name: "IX_Car_TypeCarId",
                 table: "Car",
-                column: "TypeCarID");
+                column: "TypeCarId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Car_UserID",
+                name: "IX_Car_UserId",
                 table: "Car",
-                column: "UserID");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Location_CarID",
+                name: "IX_Location_CarId",
                 table: "Location",
-                column: "CarID");
+                column: "CarId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Location_UserID",
+                name: "IX_Location_UserId",
                 table: "Location",
-                column: "UserID");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tracks_LocationId",

@@ -14,7 +14,7 @@ namespace TrackLocation.IRepository
         Task<ActionResult<IEnumerable<Location>>> GetAllDriversTrackingsForUserManager(long userManagerId);
         Task<ActionResult<IEnumerable<Location>>> GetAllTrackingsCarForUserManager(long userManagerId, long carId);
         Task<ActionResult<IEnumerable<Location>>> GetAllTrackingsForDriver(long userid);
-        Task<ActionResult<IEnumerable<Location>>> GetTrackingForDriver(long userid);
+        Task<ActionResult<IEnumerable<Location>>> GetTrackingForDriver(long userid,long locationId);
 
         /*
          * For Super User
